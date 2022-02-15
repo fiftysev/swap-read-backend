@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'username' => 'required|min:8|string|unique:users,username',
@@ -37,7 +37,7 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(Request $request)
+    public function login(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|min:8',
@@ -61,5 +61,14 @@ class AuthController extends Controller
                 'email' => $user->email
             ]
         ]);
+    }
+
+    public function whoAmI(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(['user' => [
+            'id' => auth()->user()->id,
+            'username' => auth()->user()->username,
+            'email' => auth()->user()->email
+        ]]);
     }
 }
