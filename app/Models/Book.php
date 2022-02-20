@@ -15,7 +15,8 @@ class Book extends Model
         'published_at',
         'preview',
         'description',
-        'rating'
+        'rating',
+        'user_id'
     ];
 
     public function user()

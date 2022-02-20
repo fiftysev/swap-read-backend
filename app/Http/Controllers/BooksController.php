@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 class BooksController extends Controller
 {
+    // TODO: Change resource usage to Eloquent serialization
     public function index()
     {
         return new BookCollection(Book::all());
@@ -17,6 +18,8 @@ class BooksController extends Controller
 
     public function store(Request $request)
     {
+        $user_id = auth()->user()->id;
+
         $request->validate([
             'title' => 'required|string',
             'author' => 'required|string',
@@ -25,10 +28,15 @@ class BooksController extends Controller
             'description' => 'required|string'
         ]);
 
-        Book::query()->create($request->all());
+        $book = Book::query()->create($request->all());
+
+        $book->user_id = $user_id;
+
+        $book->save();
 
         return response()->json(['data' => [
-            'status' => 'created'
+            'status' => 'created',
+            'book' => new BookResource($book),
         ]], 201);
     }
 

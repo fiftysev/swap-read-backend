@@ -19,12 +19,15 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('user', [AuthController::class, 'whoAmI']);
+    Route::prefix('user')->group(function () {
+        Route::get('', [AuthController::class, 'whoAmI']);
+        Route::get('profile', 'UserController@profile');
+    });
 });
 
 Route::prefix('books')->group(function () {
     Route::get('', 'BooksController@index');
-    Route::post('create', 'BooksController@store');
+    Route::post('create', 'BooksController@store')->middleware('auth:sanctum');
     Route::get('{id}', 'BooksController@show');
     Route::delete('{id}', 'BooksController@destroy');
 });
