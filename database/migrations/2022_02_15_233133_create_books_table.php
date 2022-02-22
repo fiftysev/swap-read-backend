@@ -21,6 +21,7 @@ class CreateBooksTable extends Migration
             $table->float('rating')->nullable();
             $table->tinyText('preview');
             $table->longText('description');
+            $table->bigInteger('count_of_rates')->default(0);
             $table->timestamps();
         });
     }

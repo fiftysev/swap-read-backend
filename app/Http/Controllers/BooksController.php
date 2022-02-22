@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\BookCollection;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
+use App\Models\Rate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -30,14 +31,15 @@ class BooksController extends Controller
 
         $book = Book::query()->create($request->all());
 
+        $book->rating = 0.0;
         $book->user_id = $user_id;
 
         $book->save();
 
-        return response()->json(['data' => [
+        return response()->json([
             'status' => 'created',
             'book' => new BookResource($book),
-        ]], 201);
+        ], 201);
     }
 
     public function show($id)
@@ -47,7 +49,24 @@ class BooksController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        $book = Book::query()->findOrFail($id);
+
+        if ($book->user_id !== auth()->user()->id) {
+            abort(403, "You're not author of this book review!");
+        }
+
+        $request->validate([
+            'title' => 'string',
+            'preview' => 'string',
+            'description' => 'string'
+        ]);
+
+        $book->update($request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'book' => new BookResource($book)
+        ]);
     }
 
     public function destroy($id)
@@ -55,14 +74,57 @@ class BooksController extends Controller
         $book = Book::query()->find($id);
 
         if (!$book) {
-            return response()->json(['data' =>
-                ['status' => 'Book not found!']
+            return response()->json([
+                'message' => 'Book not found!'
             ], 404);
         }
 
         $book->delete();
-        return response()->json(['data' =>
-            ['status' => 'success'],
+        return response()->json([
+            'status' => 'success'
         ]);
+    }
+
+    public function rate(Request $request, $id)
+    {
+        $book = Book::query()->findOrFail($id);
+
+        if ($book->user_id === auth()->id()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You can\'t rate your own book review!'
+            ], 403);
+        }
+
+        $request->validate([
+            'value' => 'required|numeric|min:1|max:10',
+            'comment' => 'string|nullable'
+        ]);
+
+
+        $exists_feedback = Rate::notDouble(auth()->id(), $id);
+
+        if ($exists_feedback) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You\'re already rate this book review!'
+            ], 400);
+        }
+
+        $feedback = Rate::query()->create([
+            'user_id' => auth()->id(),
+            'book_id' => $book->id,
+            'value' => $request->value,
+            'comment' => $request->comment
+        ]);
+
+        Book::query()->update([
+            'rating' => Rate::query()->where('book_id', $id)->average('value')
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'rate_object' => $feedback,
+        ], 201);
     }
 }

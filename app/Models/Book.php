@@ -16,7 +16,8 @@ class Book extends Model
         'preview',
         'description',
         'rating',
-        'user_id'
+        'user_id',
+        'count_of_rates'
     ];
 
     public function user()
