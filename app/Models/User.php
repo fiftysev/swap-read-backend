@@ -46,10 +46,15 @@ class User extends Authenticatable
 
     public function books()
     {
-        return $this->hasMany(Book::class);
+        return $this->hasMany(Book::class, 'user_id');
     }
 
     public function rates() {
-        return $this->hasMany(Rate::class);
+        return $this->hasMany(Rate::class,'user_id');
+    }
+
+
+    public function follows() {
+        return $this->hasMany();
     }
 }

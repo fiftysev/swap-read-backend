@@ -37,3 +37,7 @@ Route::prefix('books')->group(function () {
 
     Route::delete('{id}', 'BooksController@destroy');
 });
+
+Route::prefix('follow_service')->middleware('auth:sanctum')->group(function (){
+    Route::get('', 'SubscriptionsController@get_followers');
+});
