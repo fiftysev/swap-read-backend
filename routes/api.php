@@ -27,9 +27,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::prefix('books')->group(function () {
     Route::get('', 'BooksController@index');
-    Route::post('create', 'BooksController@store')->middleware('auth:sanctum');
-    Route::post('{id}', 'BooksController@update')->middleware('auth:sanctum');
-    Route::post('rate/{id}', 'BooksController@rate')->middleware('auth:sanctum');
     Route::get('{id}', 'BooksController@show');
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('create', 'BooksController@store');
+        Route::post('{id}', 'BooksController@update');
+        Route::post('rate/{id}', 'BooksController@rate');
+    });
+
     Route::delete('{id}', 'BooksController@destroy');
 });

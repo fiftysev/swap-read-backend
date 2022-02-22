@@ -6,12 +6,10 @@ use App\Http\Resources\BookCollection;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
 use App\Models\Rate;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class BooksController extends Controller
 {
-    // TODO: Change resource usage to Eloquent serialization
     public function index()
     {
         return new BookCollection(Book::all());
