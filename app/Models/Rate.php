@@ -30,6 +30,6 @@ class Rate extends Model
      * @return bool
      */
     public function scopeNotDouble($query, $user_id, $book_id) {
-        return $query->where('user_id', $user_id)->where('book_id', $book_id)->exists();
+        return $query->where('user_id', $user_id)->where('book_id', $book_id)->doesntExist();
     }
 }

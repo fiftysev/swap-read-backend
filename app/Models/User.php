@@ -53,8 +53,11 @@ class User extends Authenticatable
         return $this->hasMany(Rate::class,'user_id');
     }
 
-
     public function follows() {
-        return $this->hasMany();
+        return $this->hasMany(Subscription::class, 'follower');
+    }
+
+    public function followers() {
+        return $this->hasMany(Subscription::class, 'follows');
     }
 }

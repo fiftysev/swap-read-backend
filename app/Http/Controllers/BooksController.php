@@ -102,7 +102,7 @@ class BooksController extends Controller
 
         $exists_feedback = Rate::notDouble(auth()->id(), $id);
 
-        if ($exists_feedback) {
+        if (!$exists_feedback) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'You\'re already rate this book review!'
