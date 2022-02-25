@@ -32,7 +32,7 @@ Route::prefix('books')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('create', 'BooksController@store');
         Route::post('{id}', 'BooksController@update');
-        Route::post('rate/{id}', 'BooksController@rate');
+        Route::post('rate/{id}', 'RateController@store');
     });
 
     Route::delete('{id}', 'BooksController@destroy');
