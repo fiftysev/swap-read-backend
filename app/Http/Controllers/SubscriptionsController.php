@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\FollowerCollection;
-use App\Http\Resources\FollowsCollection;
 use App\Models\Subscription;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SubscriptionsController extends Controller
 {
     public function followers(): array
     {
         return Subscription::with('follower')
-            ->where('follows', auth()->id())
+            ->where('follows', Auth::id())
             ->get('follower')
             ->toArray();
     }
@@ -21,7 +19,7 @@ class SubscriptionsController extends Controller
     public function follows(): array
     {
         return Subscription::with('follows')
-            ->where('follower', auth()->id())
+            ->where('follower', Auth::id())
             ->get('follows')
             ->toArray();
     }
@@ -30,7 +28,7 @@ class SubscriptionsController extends Controller
     {
        User::query()->findOrFail($id);
 
-       $exists_subscription = Subscription::notDouble(auth()->id(), $id);
+       $exists_subscription = Subscription::notDouble(Auth::id(), $id);
 
        if (!$exists_subscription) {
            return response()->json([
@@ -40,7 +38,7 @@ class SubscriptionsController extends Controller
        }
 
        Subscription::query()->create([
-           'follower' => auth()->id(),
+           'follower' => Auth::id(),
            'follows' => $id
        ]);
 
@@ -54,7 +52,7 @@ class SubscriptionsController extends Controller
        User::query()->findOrFail($id);
 
        $exists_subscription = Subscription::query()
-           ->where('follower', auth()->id())
+           ->where('follower', Auth::id())
            ->where('follows', $id)
            ->first();
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Rate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RateController extends Controller
 {
@@ -12,7 +13,7 @@ class RateController extends Controller
     {
         $book = Book::query()->findOrFail($id);
 
-        if ($book->user_id === auth()->id()) {
+        if ($book->user_id === Auth::id()) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'You can\'t rate your own book review!'
@@ -25,7 +26,7 @@ class RateController extends Controller
         ]);
 
 
-        $exists_feedback = Rate::notDouble(auth()->id(), $id);
+        $exists_feedback = Rate::notDouble(Auth::id(), $id);
 
         if (!$exists_feedback) {
             return response()->json([
@@ -35,7 +36,7 @@ class RateController extends Controller
         }
 
         $feedback = Rate::query()->create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'book_id' => $book->id,
             'value' => $request->value,
             'comment' => $request->comment
@@ -48,6 +49,20 @@ class RateController extends Controller
         return response()->json([
             'status' => 'success',
             'rate_object' => $feedback,
+        ], 201);
+    }
+
+    public function destroy($id)
+    {
+        $rate_obj = Rate::query()
+            ->where('user_id', Auth::id())
+            ->where('book_id', $id)
+            ->firstOrFail();
+
+        $rate_obj->delete();
+
+        return response()->json([
+            'status' => 'success'
         ], 201);
     }
 }

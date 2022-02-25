@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static notDouble(int|string|null $id, $id1)
+ */
 class Subscription extends Model
 {
     protected $table = 'subscriptions';

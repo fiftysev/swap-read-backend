@@ -5,20 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Resources\BookCollection;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
-use App\Models\Rate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BooksController extends Controller
 {
-    public function index()
+    public function index(): BookCollection
     {
         return new BookCollection(Book::all());
     }
 
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
-        $user_id = auth()->user()->id;
-
         $request->validate([
             'title' => 'required|string',
             'author' => 'required|string',
@@ -30,7 +28,7 @@ class BooksController extends Controller
         $book = Book::query()->create($request->all());
 
         $book->rating = 0.0;
-        $book->user_id = $user_id;
+        $book->user_id = Auth::id();
 
         $book->save();
 
@@ -45,11 +43,11 @@ class BooksController extends Controller
         return new BookResource(Book::query()->findOrFail($id));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): \Illuminate\Http\JsonResponse
     {
         $book = Book::query()->findOrFail($id);
 
-        if ($book->user_id !== auth()->user()->id) {
+        if ($book->user_id !== Auth::id()) {
             abort(403, "You're not author of this book review!");
         }
 
@@ -67,7 +65,7 @@ class BooksController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function destroy($id): \Illuminate\Http\JsonResponse
     {
         $book = Book::query()->find($id);
 

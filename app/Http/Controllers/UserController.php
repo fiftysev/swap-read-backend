@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -11,7 +11,7 @@ class UserController extends Controller
     {
         $user = User::query()
             ->with(['books', 'rates', 'followers', 'follows'])
-            ->find(auth()->id());
+            ->find(Auth::id());
 
         return response()->json([
             'user' => $user,
