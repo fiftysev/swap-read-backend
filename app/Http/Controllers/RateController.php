@@ -14,10 +14,7 @@ class RateController extends Controller
         $book = Book::query()->findOrFail($id);
 
         if ($book->user_id === Auth::id()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'You can\'t rate your own book review!'
-            ], 403);
+            return error_response('You can\'t rate your own book review!', 403);
         }
 
         $request->validate([
@@ -29,10 +26,7 @@ class RateController extends Controller
         $exists_feedback = Rate::notDouble(Auth::id(), $id);
 
         if (!$exists_feedback) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'You\'re already rate this book review!'
-            ], 400);
+            return error_response('You\'re already rate this book review!');
         }
 
         $feedback = Rate::query()->create([

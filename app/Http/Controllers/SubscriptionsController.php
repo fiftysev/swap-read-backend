@@ -31,10 +31,7 @@ class SubscriptionsController extends Controller
        $exists_subscription = Subscription::notDouble(Auth::id(), $id);
 
        if (!$exists_subscription) {
-           return response()->json([
-               'status' => 'error',
-               'message' => "You're already follows user with id $id"
-           ], 400);
+           return error_response("You're already follows user with id $id");
        }
 
        Subscription::query()->create([
@@ -57,10 +54,7 @@ class SubscriptionsController extends Controller
            ->first();
 
        if (!$exists_subscription) {
-           return response()->json([
-               'status' => 'error',
-               'message' => "You're not follow on user with id $id"
-           ], 400);
+           return error_response("You're not follow on user with id $id");
        }
 
        return response()->json([

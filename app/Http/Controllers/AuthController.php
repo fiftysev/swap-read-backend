@@ -18,7 +18,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 401);
+            return error_response($validator->errors, 401);
         }
 
         $input = $request->all();
@@ -45,13 +45,13 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 401);
+            return error_response($validator->errors(), 401);
         }
 
         $user = User::query()->where('username', $request->username)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['error' => 'Username or login is incorrect!'], 401);
+            return error_response('username or login is incorrect!', 401);
         }
 
         return response()->json([

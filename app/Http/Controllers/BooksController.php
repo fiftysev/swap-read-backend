@@ -48,7 +48,7 @@ class BooksController extends Controller
         $book = Book::query()->findOrFail($id);
 
         if ($book->user_id !== Auth::id()) {
-            abort(403, "You're not author of this book review!");
+            return error_response('You\'re not author of post with id'.$id, 403);
         }
 
         $request->validate([
@@ -70,9 +70,7 @@ class BooksController extends Controller
         $book = Book::query()->find($id);
 
         if (!$book) {
-            return response()->json([
-                'message' => 'Book not found!'
-            ], 404);
+            return error_response('Book not found!', 404);
         }
 
         $book->delete();
