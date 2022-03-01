@@ -40,6 +40,7 @@ Route::prefix('books')->group(function () {
 Route::prefix('reviews')->group(function (){
     Route::get('{id}', 'ReviewController@index');
     Route::post('{id}', 'ReviewController@store')->middleware('auth:sanctum');
+    Route::delete('{id}', 'ReviewController@destroy')->middleware('auth:sanctum');
 });
 
 Route::prefix('subscription')->middleware('auth:sanctum')->group(function (){

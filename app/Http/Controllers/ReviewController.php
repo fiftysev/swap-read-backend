@@ -19,10 +19,6 @@ class ReviewController extends Controller
     {
         $book = Book::query()->findOrFail($id);
 
-        if ($book->user_id === Auth::id()) {
-            return CustomJsonResponses::error_response('You can\'t rate your own book review!', 403);
-        }
-
         $request->validate([
             'rating' => 'required|numeric|min:1|max:10',
             'title' => 'string|required',
@@ -34,7 +30,7 @@ class ReviewController extends Controller
         $exists_feedback = Review::notDouble(Auth::id(), $id);
 
         if (!$exists_feedback) {
-            return CustomJsonResponses::error_response('You\'re already rate this book review!');
+            return CustomJsonResponses::error_response('You\'re created review for this book !');
         }
 
         $feedback = Review::query()->create([
@@ -55,15 +51,16 @@ class ReviewController extends Controller
 
     public function destroy($id)
     {
-        $rate_obj = Review::query()
-            ->where('user_id', Auth::id())
-            ->where('book_id', $id)
-            ->firstOrFail();
+        $review = Review::query()->findOrFail($id);
 
-        $rate_obj->delete();
+        if ($review->user_id !== Auth::id()) {
+            return CustomJsonResponses::error_response('You are not author of this review', 401);
+        }
+
+        $review->delete();
 
         return response()->json([
             'status' => 'success'
-        ], 201);
+        ] );
     }
 }
