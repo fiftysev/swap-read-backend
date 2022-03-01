@@ -17,6 +17,7 @@ class CreateBooksTable extends Migration
                 ->nullOnDelete();
             $table->string('title');
             $table->string('author');
+            $table->string('ISBN')->default("");
             $table->year('published_at')->nullable();
             $table->float('rating')->default(0);
             $table->longText('description');

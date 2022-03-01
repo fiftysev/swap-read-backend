@@ -16,7 +16,8 @@ class Book extends Model
         'description',
         'rating',
         'user_id',
-        'count_of_rates'
+        'count_of_rates',
+        'ISBN'
     ];
 
     protected $casts = [
