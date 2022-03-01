@@ -9,7 +9,7 @@ class CreateBooksTable extends Migration
     public function up()
     {
         Schema::create('books', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->foreignId('user_id')
                 ->nullable()
                 ->constrained()
@@ -18,10 +18,8 @@ class CreateBooksTable extends Migration
             $table->string('title');
             $table->string('author');
             $table->year('published_at')->nullable();
-            $table->float('rating')->nullable();
-            $table->tinyText('preview');
+            $table->float('rating')->default(0);
             $table->longText('description');
-            $table->bigInteger('count_of_rates')->default(0);
             $table->timestamps();
         });
     }

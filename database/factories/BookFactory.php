@@ -19,9 +19,8 @@ class BookFactory extends Factory
             'title' => $this->faker->title()." ".$this->faker->lastName(),
             'author' =>
                 $this->faker->firstName()." ".$this->faker->lastName(),
-            'preview' => $this->faker->realText(20),
             'description' => $this->faker->realText(),
-            'published_at' => random_int(1956, 2022)
+            'published_at' => random_int(1956, 2022),
         ];
     }
 }

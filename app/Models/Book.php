@@ -13,11 +13,14 @@ class Book extends Model
         'title',
         'author',
         'published_at',
-        'preview',
         'description',
         'rating',
         'user_id',
         'count_of_rates'
+    ];
+
+    protected $casts = [
+      'rating' => 'double'
     ];
 
     public function user()

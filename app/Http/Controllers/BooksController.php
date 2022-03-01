@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\BookCollection;
-use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BooksController extends Controller
 {
-    public function index(): BookCollection
+    public function index()
     {
-        return new BookCollection(Book::all());
+        return Book::all();
     }
 
     public function store(Request $request): \Illuminate\Http\JsonResponse
@@ -21,7 +19,6 @@ class BooksController extends Controller
             'title' => 'required|string',
             'author' => 'required|string',
             'published_at' => 'numeric',
-            'preview' => 'required|string',
             'description' => 'required|string'
         ]);
 
@@ -34,13 +31,13 @@ class BooksController extends Controller
 
         return response()->json([
             'status' => 'created',
-            'book' => new BookResource($book),
+            'book' => $book,
         ], 201);
     }
 
     public function show($id)
     {
-        return new BookResource(Book::query()->findOrFail($id));
+        return Book::query()->findOrFail($id);
     }
 
     public function update(Request $request, $id): \Illuminate\Http\JsonResponse
@@ -53,7 +50,6 @@ class BooksController extends Controller
 
         $request->validate([
             'title' => 'string',
-            'preview' => 'string',
             'description' => 'string'
         ]);
 
@@ -61,7 +57,7 @@ class BooksController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'book' => new BookResource($book)
+            'book' => $book
         ]);
     }
 
@@ -74,6 +70,7 @@ class BooksController extends Controller
         }
 
         $book->delete();
+
         return response()->json([
             'status' => 'success'
         ]);
