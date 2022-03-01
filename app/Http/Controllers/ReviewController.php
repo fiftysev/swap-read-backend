@@ -6,15 +6,21 @@ use App\Models\Book;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Helpers\CustomJsonResponses;
 
 class ReviewController extends Controller
 {
+    public function index($id)
+    {
+        return Review::query()->find($id);
+    }
+
     public function store(Request $request, $id): \Illuminate\Http\JsonResponse
     {
         $book = Book::query()->findOrFail($id);
 
         if ($book->user_id === Auth::id()) {
-            return error_response('You can\'t rate your own book review!', 403);
+            return CustomJsonResponses::error_response('You can\'t rate your own book review!', 403);
         }
 
         $request->validate([
@@ -28,7 +34,7 @@ class ReviewController extends Controller
         $exists_feedback = Review::notDouble(Auth::id(), $id);
 
         if (!$exists_feedback) {
-            return error_response('You\'re already rate this book review!');
+            return CustomJsonResponses::error_response('You\'re already rate this book review!');
         }
 
         $feedback = Review::query()->create([

@@ -28,15 +28,18 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::prefix('books')->group(function () {
     Route::get('', 'BookController@index');
     Route::get('{id}', 'BookController@show');
-    Route::get('/reviews/{id}', 'BookController@reviews');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('create', 'BookController@store');
         Route::post('{id}', 'BookController@update');
-        Route::post('rate/{id}', 'ReviewController@store');
     });
 
     Route::delete('{id}', 'BookController@destroy');
+});
+
+Route::prefix('reviews')->group(function (){
+    Route::get('{id}', 'ReviewController@index');
+    Route::post('{id}', 'ReviewController@store')->middleware('auth:sanctum');
 });
 
 Route::prefix('subscription')->middleware('auth:sanctum')->group(function (){

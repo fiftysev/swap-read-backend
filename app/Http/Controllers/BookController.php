@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\CustomJsonResponses;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +11,7 @@ class BookController extends Controller
 {
     public function index()
     {
-        return Book::all();
+        return Book::all()->with('reviews');
     }
 
     public function store(Request $request): \Illuminate\Http\JsonResponse
@@ -44,7 +45,7 @@ class BookController extends Controller
         $book = Book::query()->findOrFail($id);
 
         if ($book->user_id !== Auth::id()) {
-            return error_response('You\'re not author of post with id'.$id, 403);
+            return CustomJsonResponses::error_response('You\'re not author of post with id'.$id, 403);
         }
 
         $request->validate([
@@ -65,7 +66,7 @@ class BookController extends Controller
         $book = Book::query()->find($id);
 
         if (!$book) {
-            return error_response('Book not found!', 404);
+            return CustomJsonResponses::error_response('Book not found!', 404);
         }
 
         $book->delete();

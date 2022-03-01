@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\CustomJsonResponses;
 use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +32,7 @@ class SubscriptionsController extends Controller
        $exists_subscription = Subscription::notDouble(Auth::id(), $id);
 
        if (!$exists_subscription) {
-           return error_response("You're already follows user with id $id");
+           return CustomJsonResponses::error_response("You're already follows user with id $id");
        }
 
        Subscription::query()->create([
@@ -54,7 +55,7 @@ class SubscriptionsController extends Controller
            ->first();
 
        if (!$exists_subscription) {
-           return error_response("You're not follow on user with id $id");
+           return CustomJsonResponses::error_response("You're not follow on user with id $id");
        }
 
        return response()->json([
