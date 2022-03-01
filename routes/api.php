@@ -26,16 +26,17 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::prefix('books')->group(function () {
-    Route::get('', 'BooksController@index');
-    Route::get('{id}', 'BooksController@show');
+    Route::get('', 'BookController@index');
+    Route::get('{id}', 'BookController@show');
+    Route::get('/reviews/{id}', 'BookController@reviews');
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('create', 'BooksController@store');
-        Route::post('{id}', 'BooksController@update');
-        Route::post('rate/{id}', 'RateController@store');
+        Route::post('create', 'BookController@store');
+        Route::post('{id}', 'BookController@update');
+        Route::post('rate/{id}', 'ReviewController@store');
     });
 
-    Route::delete('{id}', 'BooksController@destroy');
+    Route::delete('{id}', 'BookController@destroy');
 });
 
 Route::prefix('subscription')->middleware('auth:sanctum')->group(function (){

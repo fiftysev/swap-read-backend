@@ -44,20 +44,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function books()
+    public function books(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Book::class, 'user_id');
     }
 
-    public function rates() {
-        return $this->hasMany(Rate::class,'user_id');
+    public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Review::class,'user_id');
     }
 
-    public function follows() {
+    public function follows(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
         return $this->hasMany(Subscription::class, 'follower');
     }
 
-    public function followers() {
+    public function followers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
         return $this->hasMany(Subscription::class, 'follows');
     }
 }

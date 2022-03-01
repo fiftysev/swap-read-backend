@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
-use App\Models\Rate;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class RateController extends Controller
+class ReviewController extends Controller
 {
     public function store(Request $request, $id): \Illuminate\Http\JsonResponse
     {
@@ -18,26 +18,27 @@ class RateController extends Controller
         }
 
         $request->validate([
-            'value' => 'required|numeric|min:1|max:10',
-            'comment' => 'string|nullable'
+            'rating' => 'required|numeric|min:1|max:10',
+            'title' => 'string|required',
+            'preview' => 'string|nullable',
+            'text' => 'string|nullable'
         ]);
 
 
-        $exists_feedback = Rate::notDouble(Auth::id(), $id);
+        $exists_feedback = Review::notDouble(Auth::id(), $id);
 
         if (!$exists_feedback) {
             return error_response('You\'re already rate this book review!');
         }
 
-        $feedback = Rate::query()->create([
+        $feedback = Review::query()->create([
             'user_id' => Auth::id(),
             'book_id' => $book->id,
-            'value' => $request->value,
-            'comment' => $request->comment
+            ...$request->all()
         ]);
 
         Book::query()->update([
-            'rating' => Rate::query()->where('book_id', $id)->average('value')
+            'rating' => Review::query()->where('book_id', $id)->average('rating')
         ]);
 
         return response()->json([
@@ -48,7 +49,7 @@ class RateController extends Controller
 
     public function destroy($id)
     {
-        $rate_obj = Rate::query()
+        $rate_obj = Review::query()
             ->where('user_id', Auth::id())
             ->where('book_id', $id)
             ->firstOrFail();

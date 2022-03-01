@@ -6,7 +6,7 @@ use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class BooksController extends Controller
+class BookController extends Controller
 {
     public function index()
     {
@@ -24,7 +24,6 @@ class BooksController extends Controller
 
         $book = Book::query()->create($request->all());
 
-        $book->rating = 0.0;
         $book->user_id = Auth::id();
 
         $book->save();
@@ -76,5 +75,7 @@ class BooksController extends Controller
         ]);
     }
 
-
+    public function reviews($id) {
+        return Book::findOrFail($id)->reviews;
+    }
 }

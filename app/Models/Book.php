@@ -24,13 +24,8 @@ class Book extends Model
       'rating' => 'double'
     ];
 
-    public function user()
+    public function reviews()
     {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function rates()
-    {
-        return $this->hasMany(Rate::class, 'book_id');
+        return $this->hasMany(Review::class, 'book_id');
     }
 }
