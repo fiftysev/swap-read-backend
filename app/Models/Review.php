@@ -15,6 +15,10 @@ class Review extends Model
         'text'
     ];
 
+    protected $casts = [
+      'rating' => 'double'
+    ];
+
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
     }
