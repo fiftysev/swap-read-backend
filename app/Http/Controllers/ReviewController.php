@@ -23,7 +23,8 @@ class ReviewController extends Controller
             'rating' => 'required|numeric|min:1|max:10',
             'title' => 'string|required',
             'preview' => 'string|nullable',
-            'text' => 'string|nullable'
+            'text' => 'string|nullable',
+            'thumbnail' => 'nullable|mimes:jpeg,png|max:2048'
         ]);
 
         if (!Review::notDouble(Auth::id(), $id)) {

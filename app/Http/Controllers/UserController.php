@@ -10,7 +10,7 @@ class UserController extends Controller
     public function profile()
     {
         $user = User::query()
-            ->with(['books', 'reviews', 'followers', 'follows'])
+            ->with(['reviews', 'followers', 'follows'])
             ->find(Auth::id());
 
         return response()->json([

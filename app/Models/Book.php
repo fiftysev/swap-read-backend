@@ -15,14 +15,13 @@ class Book extends Model
         'published_at',
         'description',
         'rating',
-        'user_id',
-        'count_of_rates',
         'ISBN',
         'thumbnail'
     ];
 
     protected $casts = [
-      'rating' => 'double'
+      'rating' => 'double',
+      'published_at' => 'integer'
     ];
 
     public function reviews()

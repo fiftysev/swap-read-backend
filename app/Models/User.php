@@ -44,11 +44,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function books(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Book::class, 'user_id');
-    }
-
     public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Review::class,'user_id');

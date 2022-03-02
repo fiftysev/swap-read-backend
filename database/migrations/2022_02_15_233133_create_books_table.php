@@ -10,11 +10,6 @@ class CreateBooksTable extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
-                ->nullable()
-                ->constrained()
-                ->cascadeOnUpdate()
-                ->nullOnDelete();
             $table->string('title');
             $table->string('author');
             $table->string('ISBN')->default("");
