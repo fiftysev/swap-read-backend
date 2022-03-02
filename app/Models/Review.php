@@ -12,7 +12,8 @@ class Review extends Model
         'title',
         'rating',
         'preview',
-        'text'
+        'text',
+        'thumbnail'
     ];
 
     protected $casts = [
@@ -28,7 +29,7 @@ class Review extends Model
     }
 
     /**
-     * Scope a query to check not double feedback
+     * Scope a query to check not double review
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param integer $user_id

@@ -22,6 +22,7 @@ class CreateReviewsTable extends Migration
             $table->string('title');
             $table->tinyText('preview')->nullable();
             $table->longText('text');
+            $table->string('thumbnail')->nullable();
             $table->timestamps();
         });
     }

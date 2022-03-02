@@ -21,6 +21,7 @@ class CreateBooksTable extends Migration
             $table->year('published_at')->nullable();
             $table->float('rating')->default(0);
             $table->longText('description');
+            $table->string('thumbnail')->nullable();
             $table->timestamps();
         });
     }
