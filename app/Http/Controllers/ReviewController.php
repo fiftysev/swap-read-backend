@@ -26,10 +26,7 @@ class ReviewController extends Controller
             'text' => 'string|nullable'
         ]);
 
-
-        $exists_feedback = Review::notDouble(Auth::id(), $id);
-
-        if (!$exists_feedback) {
+        if (!Review::notDouble(Auth::id(), $id)) {
             return CustomJsonResponses::error_response('You\'re created review for this book !');
         }
 
