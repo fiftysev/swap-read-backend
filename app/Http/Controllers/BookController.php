@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Helpers\CustomJsonResponses;
 use App\Http\Resources\BookCollection;
 use App\Models\Book;
+use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -29,17 +30,10 @@ class BookController extends Controller
 
         $book = Book::query()->create($request->all());
 
-        // TODO: Create env vars using for filepaths
-
         if ($file = $request->file('thumbnail')) {
-            $filename = $book->title.'#'.$book->id.'cover.'.$file->extension();
-            $filename = preg_replace('/\s+/', '_', $filename);
+            $path = $file->store('images/covers', 'public');
 
-            $destination_path = 'public/files/thumbnails/covers';
-
-            $book->thumbnail = $filename;
-
-            Storage::putFileAs($destination_path, $file, $filename);
+            $book->thumbnail = $path;
         }
 
         $book->save();
@@ -72,17 +66,12 @@ class BookController extends Controller
             'thumbnail' => 'mimes:jpeg,png|max:2048'
         ]);
 
-        // TODO: Create env vars using for filepaths
-
         if ($file = $request->file('thumbnail')) {
-            Storage::delete('public/files/thumbnails/covers'.$book->thumbnail);
+            Storage::disk('public')->delete($book->thumbnail);
 
-            $filename = $book->title.'#'.$book->id.'cover.'.$file->extension();
-            $destination_path = 'public/files/thumbnails/covers';
+            $path = $file->store('images/covers', 'public');
 
-            $book->thumbnail = $destination_path;
-
-            Storage::putFileAs($destination_path, $file, $filename);
+            $book->thumbnail = $path;
         }
 
         $book->update($request->all());

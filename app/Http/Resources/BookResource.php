@@ -24,6 +24,7 @@ class BookResource extends JsonResource
             'ISBN' => $this->ISBN,
             'published_at' => $this->published_at,
             'updated_at' => $this->updated_at,
+            'thumbnail' => asset('storage/'.$this->thumbnail)
         ];
     }
 }
