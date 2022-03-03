@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Helpers\CustomJsonResponses;
 use App\Http\Resources\BookCollection;
 use App\Models\Book;
-use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;

@@ -15,7 +15,6 @@ class BookResource extends JsonResource
      */
     public function toArray($request)
     {
-        // TODO: Return images correctly!
         return [
             'title' => $this->title,
             'description' => $this->description,
