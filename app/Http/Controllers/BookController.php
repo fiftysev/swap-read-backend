@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Helpers\CustomJsonResponses;
 use App\Http\Resources\BookCollection;
+use App\Http\Resources\ReviewCollection;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -65,15 +66,16 @@ class BookController extends Controller
             'thumbnail' => 'mimes:jpeg,png|max:2048'
         ]);
 
+        $book->update($request->all());
+
         if ($file = $request->file('thumbnail')) {
             Storage::disk('public')->delete($book->thumbnail);
 
             $path = $file->store('images/covers', 'public');
-
             $book->thumbnail = $path;
-        }
 
-        $book->update($request->all());
+            $book->save();
+        }
 
         return response()->json([
             'status' => 'success',
@@ -95,6 +97,6 @@ class BookController extends Controller
     }
 
     public function reviews($id) {
-        return Book::query()->findOrFail($id)->reviews;
+        return new ReviewCollection(Book::query()->findOrFail($id)->reviews);
     }
 }

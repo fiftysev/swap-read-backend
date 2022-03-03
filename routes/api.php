@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::prefix('books')->group(function () {
     Route::get('', 'BookController@index');
     Route::get('{id}', 'BookController@show');
+    Route::get('{id}/reviews', 'BookController@reviews');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('create', 'BookController@store');
@@ -38,14 +39,15 @@ Route::prefix('books')->group(function () {
 });
 
 Route::prefix('reviews')->group(function (){
-    Route::get('{id}', 'ReviewController@index');
+    Route::get('', 'ReviewController@index');
+    Route::get('{id}', 'ReviewController@show');
     Route::post('{id}', 'ReviewController@store')->middleware('auth:sanctum');
     Route::delete('{id}', 'ReviewController@destroy')->middleware('auth:sanctum');
 });
 
 Route::prefix('subscription')->middleware('auth:sanctum')->group(function (){
-    Route::get('followers', 'SubscriptionsController@followers');
-    Route::get('follows', 'SubscriptionsController@follows');
-    Route::post('follow/{id}', 'SubscriptionsController@store');
-    Route::delete('unfollow/{id}', 'SubscriptionsController@destroy');
+    Route::get('followers', 'SubscriptionController@followers');
+    Route::get('follows', 'SubscriptionController@follows');
+    Route::post('follow/{id}', 'SubscriptionController@store');
+    Route::delete('unfollow/{id}', 'SubscriptionController@destroy');
 });

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ReviewCollection;
+use App\Http\Resources\ReviewResource;
 use App\Models\Book;
 use App\Models\Review;
 use Illuminate\Http\Request;
@@ -10,10 +12,16 @@ use App\Http\Helpers\CustomJsonResponses;
 
 class ReviewController extends Controller
 {
-    public function index($id)
+    public function index()
     {
-        return Review::query()->find($id);
+        return new ReviewCollection(Review::all());
     }
+
+    public function show($id)
+    {
+        return new ReviewResource(Review::query()->findOrFail($id));
+    }
+
 
     public function store(Request $request, $id): \Illuminate\Http\JsonResponse
     {
@@ -24,18 +32,26 @@ class ReviewController extends Controller
             'title' => 'string|required',
             'preview' => 'string|nullable',
             'text' => 'string|nullable',
-            'thumbnail' => 'nullable|mimes:jpeg,png|max:2048'
+            'thumbnail' => 'mimes:jpeg,png|max:2048'
         ]);
 
         if (!Review::notDouble(Auth::id(), $id)) {
             return CustomJsonResponses::error_response('You\'re created review for this book !');
         }
 
-        $feedback = Review::query()->create([
+        $review = Review::query()->create([
             'user_id' => Auth::id(),
             'book_id' => $book->id,
             ...$request->all()
         ]);
+
+        if ($file = $request->file('thumbnail')) {
+            $path = $file->store('images/rw_thumbnails', 'public');
+
+            $review->thumbnail = $path;
+
+            $review->save();
+        }
 
         Book::query()->update([
             'rating' => Review::query()->where('book_id', $id)->average('rating')
@@ -43,7 +59,7 @@ class ReviewController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'rate_object' => $feedback,
+            'review' => new ReviewResource($review),
         ], 201);
     }
 
@@ -59,6 +75,6 @@ class ReviewController extends Controller
 
         return response()->json([
             'status' => 'success'
-        ] );
+        ]);
     }
 }

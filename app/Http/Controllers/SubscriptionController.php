@@ -7,7 +7,7 @@ use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-class SubscriptionsController extends Controller
+class SubscriptionController extends Controller
 {
     public function followers(): array
     {
